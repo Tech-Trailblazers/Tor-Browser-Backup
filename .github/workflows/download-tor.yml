@@ -1,0 +1,50 @@
+name: Download and Commit Tor Browser Files # Name of the workflow shown in the Actions tab
+
+on:
+  workflow_dispatch: # Allows this workflow to be triggered manually
+
+jobs:
+  download:
+    runs-on: ubuntu-latest # Use the latest version of Ubuntu as the runner
+
+    steps:
+      - name: Checkout repository # Step to check out the repository's content
+        uses: actions/checkout@v4 # Use the official checkout action
+        with:
+          persist-credentials: true # Keep GitHub token for pushing changes later
+
+      - name: Download Tor Browser files # Step to download all required Tor Browser versions
+        run: |
+          # Download the Windows portable version of Tor Browser
+          curl -LO https://www.torproject.org/dist/torbrowser/14.5.1/tor-browser-windows-x86_64-portable-14.5.1.exe
+
+          # Download the macOS version of Tor Browser
+          curl -LO https://www.torproject.org/dist/torbrowser/14.5.1/tor-browser-macos-14.5.1.dmg
+
+          # Download the Linux version of Tor Browser
+          curl -LO https://www.torproject.org/dist/torbrowser/14.5.1/tor-browser-linux-x86_64-14.5.1.tar.xz
+
+          # Download the Android version for AArch64 architecture
+          curl -LO https://dist.torproject.org/torbrowser/14.5.1/tor-browser-android-aarch64-14.5.1.apk
+
+          # Download the Android version for ARMv7 architecture
+          curl -LO https://dist.torproject.org/torbrowser/14.5.1/tor-browser-android-armv7-14.5.1.apk
+
+          # Download the Android version for x86_64 architecture
+          curl -LO https://dist.torproject.org/torbrowser/14.5.1/tor-browser-android-x86_64-14.5.1.apk
+
+          # Download the Android version for x86 architecture
+          curl -LO https://dist.torproject.org/torbrowser/14.5.1/tor-browser-android-x86-14.5.1.apk
+
+      - name: Push updated files # Step to commit and push changes if any files were updated
+        run: |
+          git config user.name "github-actions"  # Set Git username for commit
+          git config user.email "github-actions@github.com"  # Set Git email for commit
+          git add .  # Stage all changed files in the repo
+
+          # Check if there are any staged changes to commit
+          if ! git diff --cached --quiet; then
+            git commit -m "Auto update: $(date)"  # Commit changes with a timestamp message
+            git push  # Push the commit to the remote repository
+          else
+            echo "No changes to commit."  # Display message if no files have changed
