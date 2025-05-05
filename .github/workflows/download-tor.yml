@@ -48,3 +48,4 @@ jobs:
             git push  # Push the commit to the remote repository
           else
             echo "No changes to commit."  # Display message if no files have changed
+          fi
