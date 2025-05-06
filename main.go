@@ -79,7 +79,7 @@ func filterFiles(links []string) []string {
 
 func downloadFile(baseURL, fileName, outDir string) error {
 	// Define allowed extensions inside the function
-	allowedExts := []string{".asc",".asc-ma1",".asc-pierov",".apk",".bspatch",".dmg",".exe",".gz",".idsig",".mar",".txt",".zip",".xz",}
+	allowedExts := []string{".asc",".asc-ma1",".asc-pierov",".apk",".bspatch",".dmg",".exe",".gz",".idsig",".mar",".txt",".zip",".xz"}
 
 	// Inline extension check
 	ext := strings.ToLower(filepath.Ext(fileName))
