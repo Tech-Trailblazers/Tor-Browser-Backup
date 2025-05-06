@@ -36,7 +36,7 @@ jobs:
       - name: Run Go Project
         run: |
           go build -o update-tor .  # Build the Go project to create an executable named update-tor
-          ./update-tor  # Execute the built Go project
+          ./update-tor -version="13.5.16"  # Execute the built Go project
 
       - name: Push updated files # Step to commit and push changes if any files were updated
         run: |
