@@ -95,6 +95,15 @@ func downloadFile(baseURL, fileName, outDir string) error {
 		return nil
 	}
 
+	// Check if the file already exists
+	outPath := filepath.Join(outDir, fileName)
+	if fileExists(outPath) {
+		log.Printf("File %s already exists, skipping download.\n", outPath)
+		return nil
+	}
+
+	// Download the file
+	// Construct the full URL
 	url := baseURL + fileName
 	resp, err := http.Get(url)
 	if err != nil {
@@ -123,6 +132,17 @@ func downloadFile(baseURL, fileName, outDir string) error {
 
 	fmt.Printf("Downloaded %s\n", fileName)
 	return nil
+}
+
+/* It checks if the file exists
+If the file exists, it returns true
+If the file does not exist, it returns false */
+func fileExists(filename string) bool {
+	info, err := os.Stat(filename)
+	if err != nil {
+		return false
+	}
+	return !info.IsDir()
 }
 
 
