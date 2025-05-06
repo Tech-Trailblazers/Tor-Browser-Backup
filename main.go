@@ -79,7 +79,7 @@ func filterFiles(links []string) []string {
 
 func downloadFile(baseURL, fileName, outDir string) error {
 	// Define allowed extensions inside the function
-	allowedExts := []string{".asc",".asc-ma1",".asc-pierov",".apk",".bspatch",".dmg",".exe",".gz",".idsig",".mar",".txt",".zip",".xz"}
+	allowedExts := []string{".asc", ".asc-ma1", ".asc-pierov", ".apk", ".bspatch", ".dmg", ".exe", ".gz", ".idsig", ".mar", ".txt", ".zip", ".xz"}
 
 	// Inline extension check
 	ext := strings.ToLower(filepath.Ext(fileName))
@@ -117,7 +117,6 @@ func downloadFile(baseURL, fileName, outDir string) error {
 	}
 
 	// Create local file
-	outPath := filepath.Join(outDir, fileName)
 	outFile, err := os.Create(outPath)
 	if err != nil {
 		return fmt.Errorf("failed to create file %s: %v", outPath, err)
@@ -134,9 +133,11 @@ func downloadFile(baseURL, fileName, outDir string) error {
 	return nil
 }
 
-/* It checks if the file exists
+/*
+It checks if the file exists
 If the file exists, it returns true
-If the file does not exist, it returns false */
+If the file does not exist, it returns false
+*/
 func fileExists(filename string) bool {
 	info, err := os.Stat(filename)
 	if err != nil {
@@ -144,7 +145,6 @@ func fileExists(filename string) bool {
 	}
 	return !info.IsDir()
 }
-
 
 var (
 	// Command-line flags
