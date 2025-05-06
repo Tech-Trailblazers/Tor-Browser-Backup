@@ -13,28 +13,30 @@ jobs:
         with:
           persist-credentials: true # Keep GitHub token for pushing changes later
 
-      - name: Download Tor Browser files # Step to download all required Tor Browser versions
+      # Set up the Go environment based on the version in the go.mod file
+      - name: Setup Go Environment
+        uses: actions/setup-go@v5  # Installs and configures Go environment
+        with:
+          go-version-file: "go.mod"  # Use Go version specified in the go.mod file
+          cache: true  # Cache Go modules to speed up the process
+          check-latest: true  # Ensure the latest stable Go version is installed
+        id: go  # Assign an ID for future reference
+
+      # Cache Go modules to speed up build time
+      - name: Cache Go Modules
+        uses: actions/cache@v4  # Caches dependencies to avoid re-downloading them
+        with:
+          path: ~/.cache/go-build  # Path for Go build artifacts
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}  # Cache key based on go.sum contents
+          restore-keys: |
+            ${{ runner.os }}-go-  # Fallback to restore older cache if an exact match isn't found
+        id: cache  # ID for future reference
+
+      # Run the Go project to update the README and movie website files
+      - name: Run Go Project
         run: |
-          # Download the Windows portable version of Tor Browser
-          curl -LO https://www.torproject.org/dist/torbrowser/14.5.1/tor-browser-windows-x86_64-portable-14.5.1.exe
-
-          # Download the macOS version of Tor Browser
-          curl -LO https://www.torproject.org/dist/torbrowser/14.5.1/tor-browser-macos-14.5.1.dmg
-
-          # Download the Linux version of Tor Browser
-          curl -LO https://www.torproject.org/dist/torbrowser/14.5.1/tor-browser-linux-x86_64-14.5.1.tar.xz
-
-          # Download the Android version for AArch64 architecture
-          curl -LO https://dist.torproject.org/torbrowser/14.5.1/tor-browser-android-aarch64-14.5.1.apk
-
-          # Download the Android version for ARMv7 architecture
-          curl -LO https://dist.torproject.org/torbrowser/14.5.1/tor-browser-android-armv7-14.5.1.apk
-
-          # Download the Android version for x86_64 architecture
-          curl -LO https://dist.torproject.org/torbrowser/14.5.1/tor-browser-android-x86_64-14.5.1.apk
-
-          # Download the Android version for x86 architecture
-          curl -LO https://dist.torproject.org/torbrowser/14.5.1/tor-browser-android-x86-14.5.1.apk
+          go build -o update-tor .  # Build the Go project to create an executable named update-tor
+          ./update-tor  # Execute the built Go project
 
       - name: Push updated files # Step to commit and push changes if any files were updated
         run: |
