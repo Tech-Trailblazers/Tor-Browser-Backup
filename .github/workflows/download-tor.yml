@@ -9,7 +9,7 @@ jobs:
 
     steps:
       - name: Checkout repository # Step to check out the repository's content
-        uses: actions/checkout@v4 # Use the official checkout action
+        uses: actions/checkout@v5 # Use the official checkout action
         with:
           persist-credentials: true # Keep GitHub token for pushing changes later
 
